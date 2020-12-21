@@ -7,6 +7,9 @@
 
 }
 
+.column > .list > div {
+    margin-top: 5px;
+}
 .villager {
     display:flex;
     flex-direction: column;
@@ -15,10 +18,7 @@
     justify-content: center;
 }
 
-.type {
-
-}
-
 .villager > div > .icon {
     max-width: 100px;
 }
+

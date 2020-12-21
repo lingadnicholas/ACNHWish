@@ -1,20 +1,16 @@
 import './acnhTable.css';
 import React, { useState } from 'react'; 
-import villager from './villager.png';
+import v from './villager.png';
 
-function VillagerColumn() 
+function Villager(prop)
 {
     return(
-    <div className='column'> 
-        <div className='type'>
-            <strong>Cranky</strong>
-        </div>
         <div className='villager'>
             <div>
                 <strong>Cyrano</strong>
             </div>
             <div>            
-                <img className='icon' alt='Cyrano icon' src ={villager}></img>
+                <img className='icon' alt='Cyrano icon' src ={v}></img>
             </div>
             <div>
                 <em>Birthday:</em> March 9th
@@ -28,6 +24,20 @@ function VillagerColumn()
             <div>
                 <em>Catchphrase:</em> "ah-CHOO" 
             </div>
+        </div>
+    )
+}
+function VillagerColumn(prop) 
+{
+    return(
+    <div className='column'> 
+        <div className='type'>
+            <strong>{prop.personality}</strong>
+        </div>
+        <div className='list'>
+            <div><Villager /></div>
+            <div><Villager /></div>
+            <div><Villager /></div>
         </div>
     </div>
     )
