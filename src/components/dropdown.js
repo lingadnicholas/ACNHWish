@@ -14,34 +14,54 @@ const compare = (a, b) => {
     return 0;
   }
 
+  var options = [];
+const url = 'https://acnhapi.com/v1/villagers/'
+/*When there is a valid value from the dropdown list, we want to:
+fetch the JSON object with that ID from the ACNH API
+Get all the data (Personality, Name, Picture, Birthday, Species, Gender, Catchphrase)
+Create a new Villager, place it in the respective VillagerColumn*/
 
-  export default class GetVillagerNames extends React.Component {
-    options=[]
+async function onChange(value) {
+  console.log(url+value)
+  const response = await fetch(url + value);
+  const data = await response.json();
+  const villagerInfo = {
+    key: value,
+    name: data.name['name-USen'],
+    personality: data.personality,
+    image_url: data.image_url,
+    species: data.species,
+    gender: data.gender,
+    catch_phrase: data.['catch-phrase']
+  }
+  console.log(villagerInfo)
+  //TODO: Create a new villager, place it in the respective villagercolumn
+}
+
+export default class GetVillagerNames extends React.Component {
     state = {
-      loading:true 
+      loading:true,
     }
 
     async componentDidMount() {
-      const url = 'https://acnhapi.com/v1/villagers/';
       const response = await fetch(url);
       const data = await response.json();
       for (var key in data) {
         var option = {name: data[key].name['name-USen'], value: data[key].id}
-        this.options.push(option);
+        options.push(option);
       }
-      this.options.sort(compare);
+      options.sort(compare);
       this.setState({loading:false})
     };
 
+
     render() {
-      console.log(this.options)
       if (this.state.loading) {
         return <div></div>
       }
-      console.log(this.options.length)
       return (
       <div>
-      <SelectSearch options={this.options} search="true" placeholder="Select villager" />
+      <SelectSearch options={options} search="true" placeholder="Select villager" onChange={onChange} />
       </div>
       )
     };

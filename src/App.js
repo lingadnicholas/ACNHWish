@@ -3,8 +3,6 @@ import VillagerColumn from './components/acnhTable'
 import GetVillagerNames from './components/dropdown';
 
 
-
-
 function App() {
   return (
     <div className="App">
