@@ -23,6 +23,7 @@ export default class GetVillagerNames extends React.Component {
       loading:true,
     }
 
+    //Fetch list of villager names from the ACNH API
     async componentDidMount() {
       const url = 'https://acnhapi.com/v1/villagers/'
       const response = await fetch(url);
@@ -48,4 +49,3 @@ export default class GetVillagerNames extends React.Component {
     };
   };
 
-  /*NOW FIND OUT HOW TO GET THE VALUE LMAO*/

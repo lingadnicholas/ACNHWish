@@ -1,6 +1,6 @@
 import './acnhTable.css';
 import React, { useState } from 'react'; 
-import v from './villager.png';
+import { render } from '@testing-library/react';
 
 /*When there is a valid value from the dropdown list, we want to:
 fetch the JSON object with that ID from the ACNH API
@@ -15,17 +15,23 @@ export async function GetVillager(value) {
       name: data.name['name-USen'],
       personality: data.personality,
       image_url: data.image_uri,
-      birthday: data.['birthday-string'],
+      birthday: data['birthday-string'],
       species: data.species,
       gender: data.gender,
       catch_phrase: data['catch-phrase']
     }
-    console.log(villagerInfo)
-    //TODO: Create a new villager, place it in the respective villagercolumn
+
+    //Don't add duplicates
+    if (!ids.includes(villagerInfo.key))
+    {
+        villagers.push(villagerInfo)
+        ids.push(villagerInfo.key)
+    }
   }
 
 function Villager(prop)
 {
+    //Key = Villager ID 
     return(
         <div className='villager'>
             <div>
@@ -49,19 +55,76 @@ function Villager(prop)
         </div>
     )
 }
-function VillagerColumn(prop) 
+
+var villagers = []; 
+var ids = []; 
+
+export default class GetVillagerNames extends React.Component
 {
+    constructor(props) {
+        super(props);
+        this.key = this.props.personality; 
+
+    }
+    state = { 
+        loading: true,
+        list: []
+    }
+    intervalID;
+    added = []; 
+
+    /*Called by checkVillagers, adds villagers to our state, and forces a rerender*/
+    addToList = (villagerInfo) => {
+        this.added.push(villagerInfo.key)
+        this.setState( {list: [...this.state.list, <Villager
+                        key={villagerInfo.key}
+                        name={villagerInfo.name}
+                        image_url={villagerInfo.image_url}
+                        birthday={villagerInfo.birthday}
+                        species={villagerInfo.species}
+                        gender={villagerInfo.gender}
+                        catch_phrase={villagerInfo.catch_phrase}
+                        />] } )
+        
+    }
+
+    /*Checks the villagers array to see if there are any new additions
+    of villagers with this specific personality type!*/
+    checkVillagers = () => {
+        if (villagers.length === 0)
+            return; 
+        for (var i = 0; i < villagers.length; i++)
+        {
+            if (this.props.personality === villagers[i].personality 
+                && !this.added.includes(villagers[i].key))
+                {
+                    this.addToList(villagers[i])
+                }
+        }
+    }
+
+    
+    /*Check every second to add villager to wishlist!*/
+    componentDidMount() {
+        this.checkVillagers()
+        this.intervalID = setInterval(this.checkVillagers.bind(this), 500)
+    }
+    componentWillUnmount() {
+        clearInterval(this.intervalID);
+    }
+
+    render()
+    {
     return(
     <div className='column'> 
         <div className='type'>
-            <strong>{prop.personality}</strong>
+            <strong>{this.props.personality}</strong>
         </div>
         <div className='list'>
-            <Villager name='test' birthday='test' species='test' gender='test' catch_phrase='test' image_url={v}/>
-            <Villager name='test2' birthday='test2' species='test2' gender='test2' catch_phrase='test2' image_url={v}/>
+            {this.state.list}
         </div>
     </div>
     )
+    }
 }
 
-export default VillagerColumn;
