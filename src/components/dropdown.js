@@ -32,7 +32,7 @@ async function onChange(value) {
     image_url: data.image_url,
     species: data.species,
     gender: data.gender,
-    catch_phrase: data.['catch-phrase']
+    catch_phrase: data['catch-phrase']
   }
   console.log(villagerInfo)
   //TODO: Create a new villager, place it in the respective villagercolumn
